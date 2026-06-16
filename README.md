@@ -1,75 +1,59 @@
 # PersonaAI Generator
 
-Aplicación Streamlit para crear Buyer Personas avanzados. Funciona con API de IA mediante LiteLLM o de forma gratuita sin API Key usando el flujo manual de copiar prompt y pegar JSON.
+Aplicación Next.js para crear Buyer Personas avanzados con una interfaz limpia y sin marca de Streamlit.
 
-## Instalación
+## Qué incluye
 
-1. Abre una terminal en esta carpeta.
-2. Crea un entorno virtual, si quieres aislar dependencias:
+- Modo Manual gratis: genera un prompt, lo pegas en una IA externa y vuelves con el JSON.
+- Parser tolerante: limpia vallas ```json, texto antes/después y comas colgantes.
+- Validación del esquema obligatorio de Buyer Personas.
+- Investigación manual asistida y automática con Tavily.
+- Modo API opcional para OpenAI, Anthropic, Google, Mistral y Groq.
+- Exportación a Markdown, TXT, JSON y PDF.
 
-```bash
-python -m venv .venv
-```
-
-3. Actívalo:
-
-```bash
-.venv\Scripts\activate
-```
-
-4. Instala dependencias:
+## Desarrollo local
 
 ```bash
-python -m pip install -r requirements.txt
+npm install
+npm run dev
 ```
 
-## Ejecución local
+Abre:
 
-Comando recomendado:
+```text
+http://localhost:3000
+```
+
+## Build
 
 ```bash
-python -m streamlit run app.py
+npm run build
+npm run start
 ```
 
-También puede funcionar:
+## Despliegue recomendado: Vercel
 
-```bash
-streamlit run app.py
-```
+1. Conecta este repositorio en Vercel.
+2. Framework preset: `Next.js`.
+3. Build command: `npm run build`.
+4. Output: automático.
+5. No necesitas variables de entorno para el modo Manual gratis.
 
-Si `streamlit` no está en el PATH de Windows, usa el primer comando.
+Las API Keys se introducen en pantalla y se usan solo para esa petición. No se guardan en el repositorio.
 
-## Uso rápido sin API Key
+## Cloudflare
 
-1. En la barra lateral, elige `Modo de generación` → `Manual · gratis`.
-2. En `Investigación de mercado`, elige `Manual asistida` o `Sin investigación`.
-3. Rellena los datos del negocio y el mercado objetivo.
-4. Pulsa `Generar prompt de Buyer Personas`.
-5. Copia el prompt y pégalo en ChatGPT, Claude, Gemini, Copilot u otro chat.
-6. Copia la respuesta JSON de esa IA.
-7. Pégala en `Respuesta JSON de la IA externa`.
-8. Pulsa `Procesar respuesta y crear personas`.
-9. Ve a `Resultados` y exporta Markdown, TXT, PDF o JSON.
+Cloudflare Pages es excelente para sitios estáticos y frontends. Esta app usa rutas de servidor (`/api/generate` y `/api/research`) para el modo API y Tavily, por lo que la opción más directa es Vercel.
 
-## Uso con API
+Si quieres usar Cloudflare:
 
-1. En la barra lateral, elige `API · automático`.
-2. Selecciona proveedor, modelo, temperatura y tokens.
-3. Pega la API Key del proveedor. La app no la guarda en disco.
-4. Si quieres investigación automática, elige `Automática con API` y pega tu API Key de Tavily.
-5. Rellena el formulario y pulsa `Generar Buyer Personas`.
+- Para usar solo modo Manual: puede adaptarse a exportación estática.
+- Para conservar API y Tavily: conviene añadir un adaptador compatible con Next.js en Cloudflare o mover esas rutas a Cloudflare Workers.
 
-## Estructura del proyecto
+## Archivos principales
 
-- `app.py`: interfaz, flujo de usuario y orquestación.
-- `llm.py`: proveedores, prompt del sistema, generación API, modo manual, parser y validador JSON.
-- `research.py`: investigación automática con Tavily y modo manual asistido.
-- `extractors.py`: extracción de texto de URL, PDF, TXT y DOCX.
-- `exporters.py`: conversión a Markdown, TXT, JSON y PDF.
-- `requirements.txt`: dependencias.
-
-## Notas
-
-- Los modelos están concentrados en `PROVIDERS` dentro de `llm.py` para poder actualizarlos en un solo lugar.
-- El modo manual contabiliza coste y tokens como 0 porque la inferencia ocurre fuera de la app.
-- Los Buyer Personas deben tratarse como hipótesis de trabajo y validarse con clientes reales.
+- `app/page.tsx`: interfaz principal.
+- `app/api/generate/route.ts`: generación automática opcional.
+- `app/api/research/route.ts`: investigación automática opcional.
+- `lib/persona.ts`: prompts, parser, validación y exportación Markdown.
+- `lib/providers.ts`: llamadas a proveedores de IA.

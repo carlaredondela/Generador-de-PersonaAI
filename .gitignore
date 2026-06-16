@@ -4,3 +4,10 @@ __pycache__/
 venv/
 .env
 .streamlit/secrets.toml
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+.vercel/
+.wrangler/
